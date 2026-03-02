@@ -9,8 +9,8 @@ use std::time::Duration;
 use std::time::Instant;
 use std::usize;
 
-mod cli;
-mod dictionary;
+pub mod cli;
+pub mod dictionary;
 mod engine;
 
 #[derive(ValueEnum, Clone, Debug)]
@@ -80,7 +80,7 @@ impl GameResult {
 pub fn run(
     out: &mut Stdout,
     words: &[String],
-    settings: Args,
+    settings: &Args,
     _render_mode: RenderMode,
 ) -> Result<GameResult, Box<dyn std::error::Error>> {
     let mut rng = thread_rng();
@@ -115,7 +115,7 @@ pub fn run(
                     incorrect_chars += word_result.incorrect_chars;
                 }
                 queue.remove(0);
-                if words_completed < settings.quantity as usize - 1 {
+                if words_completed < (settings.quantity - settings.word_preview) as usize {
                     queue.push(get_word());
                 }
             }

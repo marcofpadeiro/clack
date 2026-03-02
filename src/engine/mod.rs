@@ -26,13 +26,15 @@ pub fn process_word_input(
     let mut incorrect: usize = 0;
 
     loop {
-        if written == target && auto_advance {
-            break;
-        }
         if let Some(limit) = time_limit {
             if start_time.elapsed() >= limit {
                 break;
             }
+        }
+
+        if written == target && auto_advance {
+            execute!(out, style::ResetColor)?;
+            return Ok(Some(WordResult::new(target_chars.len(), incorrect))); // word finished successfully
         }
 
         if event::poll(Duration::from_millis(10))? {

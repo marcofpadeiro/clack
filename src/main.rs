@@ -1,13 +1,11 @@
 use std::{io::stdout, process::exit};
 
+use clack::{RenderMode, run};
 use clap::Parser;
 use crossterm::terminal;
-use clack::{RenderMode, run};
 
-use crate::{cli::Args, dictionary::load_dictionary};
-
-mod cli;
-mod dictionary;
+use clack::dictionary::load_dictionary;
+use clack::cli::Args;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
@@ -15,7 +13,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut out = stdout();
     terminal::enable_raw_mode()?;
 
-    let dictionary = load_dictionary(&args.dictionary, args.filter);
+    let dictionary = load_dictionary(&args.dictionary, &args.filter);
     if dictionary.is_empty() {
         terminal::disable_raw_mode()?;
         println!("empty dictionary");
@@ -25,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let result = run(
         &mut out,
         &dictionary,
-        args,
+        &args,
         RenderMode::Upcoming(args.word_preview as usize),
     );
 
