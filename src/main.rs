@@ -25,10 +25,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let result = run(
         &mut out,
         &dictionary,
-        args.word_preview as usize,
-        args.mode,
-        args.quantity,
-        args.auto_advance,
+        args,
         RenderMode::Upcoming(args.word_preview as usize),
     );
 
