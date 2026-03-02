@@ -64,7 +64,7 @@ clack --mode words --quantity 67 --word-preview 0 --min-word-size 0 --dictionary
 - [ ] Live WPM counter
 - [x] Support for custom dictionary files
 - [x] Support for filtering dictionary words based on provided letters
-- [ ] Fix infinite games when autoadvance is on
+- [x] Fix infinite games when autoadvance is on
 - [ ] Variable number_words_show if 0 show all the words
 - [ ] Log runs
 - [ ] Add ,.!; symbols to words that appear
