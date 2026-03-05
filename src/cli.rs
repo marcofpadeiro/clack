@@ -17,10 +17,14 @@ pub struct Args {
     #[arg(short, long, default_value = "medium")]
     pub dictionary: String,
 
-    /// restrict dictionary to words containing only these characters
+    /// restrict dictionary to include words containing only these characters
     #[arg(short, long)]
-    pub filter: Option<String>,
+    pub include: Option<String>,
 
+    /// exclude these chars from dictionary
+    #[arg(short, long)]
+    pub exclude: Option<String>,
+    
     /// number of upcoming words to display in the queue
     #[arg(short, long, default_value_t = 2)]
     pub word_preview: usize,
@@ -36,4 +40,8 @@ pub struct Args {
     /// generate random strings using only the characters provided (overrides dictionary parameter)
     #[arg(short, long)]
     pub practice: Option<String>,
+
+    /// will make the first letter of a word upper-case (random)
+    #[arg(short, long, default_value_t = false)]
+    pub upper_case: bool,
 }

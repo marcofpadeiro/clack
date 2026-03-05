@@ -43,7 +43,7 @@ pub fn setup_provider(args: &Args) -> WordProvider {
     if let Some(ref keys) = args.practice {
         WordProvider::Practice(keys.chars().collect())
     } else {
-        let words = load_dictionary(&args.dictionary, args.min_word_size, &args.filter);
+        let words = load_dictionary(&args.dictionary, args.min_word_size, &args.include, &args.exclude);
         if words.is_empty() {
             eprintln!("error: no words matched your filter settings or dictionary was empty");
             std::process::exit(1);

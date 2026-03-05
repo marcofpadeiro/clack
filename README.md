@@ -24,11 +24,13 @@ you can customize your session using flags:
 | `--mode` | `-m` | `timer` | **timer:** fixed time, variable words <br>**words:** fixed words, variable time |
 | `--quantity` | `-q` | `30` | seconds for timer word count for words |
 | `--dictionary` | `-d` | `medium` | **predefined:** small, medium, long<br>**custom:** local path or url |
-| `--filter` | `-f` | `none` | restrict dictionary to words containing only these characters |
+| `--include` | `-i` | `none` | restrict dictionary to include words containing only these characters |
+| `--exclude` | `-e` | `none` | exclude these chars from dictionary |
 | `--word-preview` | `-w` | `3` | number of upcoming words to show in the queue |
 | `--min-word-size` | `-s` | `2` | exclude words shorter than this length |
 | `--auto-advance` | `-a` | `false` | advance to the next word automatically without pressing space |
 | `--practice` | `-p` | `off` | generate random strings using only the characters provided (overrides dictionary parameter) |
+| `--upper-case` | `-u` | `off` | will make the first letter of a word upper-case (random) |
 
 ## examples
 ##### race against time
@@ -46,7 +48,7 @@ clack --mode words --quantity 50 --dictionary short
 #### practice home row
 only type words that consist of home row characters:
 ```bash
-clack --filter "asdfghjkl"
+clack --include "asdfghjkl"
 ```
 
 #### advanced
@@ -69,7 +71,7 @@ clack --mode words --quantity 67 --word-preview 0 --min-word-size 0 --dictionary
 - [ ] Variable number_words_show if 0 show all the words
 - [ ] Log runs
 - [x] Add ,.!; symbols to words that appear
-- [ ] Option to filter out words containg '
+- [x] Option to filter out words containg '
 - [x] Option to add numbers to rotation
 - [ ] Option to select different difficulties of the words that are shown
-- [ ] Option to appear upper case letters
+- [x] Option to appear upper case letters

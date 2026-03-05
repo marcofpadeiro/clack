@@ -4,6 +4,7 @@ use crate::engine::process_word_input;
 use crate::engine::render::render_line;
 use clap::ValueEnum;
 use rand::thread_rng;
+use rand::Rng;
 use std::collections::VecDeque;
 use std::io::Stdout;
 use std::time::Duration;
@@ -13,6 +14,8 @@ use std::usize;
 pub mod cli;
 pub mod dictionary;
 mod engine;
+
+const CHANCE_UPPERCASE: f64 = 40.0; // %
 
 #[derive(ValueEnum, Clone, Debug)]
 pub enum GameMode {
@@ -109,14 +112,12 @@ pub fn run(
         GameMode::Timer => start.elapsed() < time_limit.unwrap_or_default(),
     } {
         render_line(out, &queue)?;
-        let current_word = queue.front().map(|s| s.as_str()).unwrap_or("thisshouldnothappenlmao");
-        let word_cycle_result = process_word_input(
-            out,
-            current_word,
-            settings.auto_advance,
-            time_limit,
-            start,
-        )?;
+        let current_word = queue
+            .front()
+            .map(|s| s.as_str())
+            .unwrap_or("thisshouldnothappenlmao");
+        let word_cycle_result =
+            process_word_input(out, current_word, settings.auto_advance, time_limit, start)?;
 
         if let Some(word_result) = word_cycle_result {
             words_completed += 1;
@@ -131,7 +132,16 @@ pub fn run(
             };
 
             if should_refill {
-                queue.push_back(provider.get_word(&mut rng));
+                let mut word = provider.get_word(&mut rng);
+                if settings.upper_case {
+                    if rng.gen_bool(CHANCE_UPPERCASE / 100.0) {
+                        let mut chars = word.chars();
+                        if let Some(first) = chars.next() {
+                            word = first.to_uppercase().to_string() + chars.as_str();
+                        }
+                    }
+                }
+                queue.push_back(word);
             }
         }
     }

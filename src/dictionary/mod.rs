@@ -28,7 +28,12 @@ impl WordProvider {
     }
 }
 
-pub fn load_dictionary(input: &str, min_word_size: usize, filter: &Option<String>) -> Vec<String> {
+pub fn load_dictionary(
+    input: &str,
+    min_word_size: usize,
+    include: &Option<String>,
+    exclude: &Option<String>,
+) -> Vec<String> {
     let source = DictSource::parse(input);
     let cache_dir = dirs::cache_dir()
         .expect("Cache dir not found")
@@ -39,7 +44,7 @@ pub fn load_dictionary(input: &str, min_word_size: usize, filter: &Option<String
     }
 
     let mut dictionary = get_dictionary(&cache_dir, &source);
-    filter_dictionary(&mut dictionary, min_word_size, &filter);
+    filter_dictionary(&mut dictionary, min_word_size, &include, &exclude);
     dictionary
 }
 
@@ -94,15 +99,28 @@ fn get_dictionary(cache_dir: &PathBuf, source: &DictSource) -> Vec<String> {
     content.lines().map(|s| s.to_string()).collect()
 }
 
-fn filter_dictionary(dictionary: &mut Vec<String>, min_word_size: usize, filter: &Option<String>) {
+fn filter_dictionary(
+    dictionary: &mut Vec<String>,
+    min_word_size: usize,
+    include: &Option<String>,
+    exclude: &Option<String>,
+) {
     dictionary.retain(|w| w.len() > min_word_size);
 
-    if let Some(filter) = filter {
+    if let Some(filter) = include {
         let mut allowed = [false; 256];
         for b in filter.bytes() {
             allowed[b as usize] = true;
         }
 
         dictionary.retain(|word| word.bytes().all(|b| allowed[b as usize]));
+    }
+
+    if let Some(exc) = exclude {
+        let mut forbidden = [false; 256];
+        for b in exc.bytes() {
+            forbidden[b as usize] = true;
+        }
+        dictionary.retain(|word| word.bytes().all(|b| !forbidden[b as usize]));
     }
 }
